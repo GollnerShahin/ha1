@@ -89,6 +89,22 @@ class CalculatorTest {
     }
 
 
-    //TODO hier weitere Tests erstellen
+// Teilaufgabe 1. (wird direkt Grün)
+    @Test
+    @DisplayName("should clear the current screen when pressing the clear key")
+    public void testPressClearKey() {
+        Calculator calc = new Calculator();
+
+        calc.screen = "77";
+        calc.latestOperation = "+";
+        calc.latestValue = 7;
+
+        calc.pressClearKey();
+
+        assertEquals("0", calc.screen);
+        assertEquals("", calc.latestOperation);
+        assertEquals(0.0, calc.latestValue, 0.001);
+
+    }
 }
 
