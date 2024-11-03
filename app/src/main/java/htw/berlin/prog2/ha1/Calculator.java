@@ -60,8 +60,34 @@ public class Calculator {
      * @param operation "+" für Addition, "-" für Substraktion, "x" für Multiplikation, "/" für Division
      */
     public void pressBinaryOperationKey(String operation)  {
-        latestValue = Double.parseDouble(screen);
-        latestOperation = operation;
+        if (latestOperation != null && !latestOperation.isEmpty()) {
+            double currentOperand = Double.parseDouble(screen);
+            double result;
+            switch (latestOperation) {
+                case "+":
+                    result = latestValue + currentOperand;
+                    break;
+                case "-":
+                    result = latestValue - currentOperand;
+                    break;
+                case "x":
+                    result = latestValue * currentOperand;
+                    break;
+                case "/":
+                    if (currentOperand == 0) {
+                        screen = "Error";
+                        return;
+                    }
+                    result = latestValue / currentOperand;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid operation");
+            }
+            screen = Double.toString(result);
+            latestValue = result;
+        } else {
+            latestValue = Double.parseDouble(screen);
+        }     latestOperation = operation;
     }
 
     /**
@@ -117,17 +143,23 @@ public class Calculator {
      * Operation (ggf. inklusive letztem Operand) erneut auf den aktuellen Bildschirminhalt angewandt
      * und das Ergebnis direkt angezeigt.
      */
+    private double latestResult;
+
     public void pressEqualsKey() {
-        var result = switch(latestOperation) {
-            case "+" -> latestValue + Double.parseDouble(screen);
-            case "-" -> latestValue - Double.parseDouble(screen);
-            case "x" -> latestValue * Double.parseDouble(screen);
-            case "/" -> latestValue / Double.parseDouble(screen);
-            default -> throw new IllegalArgumentException();
-        };
-        screen = Double.toString(result);
-        if(screen.equals("Infinity")) screen = "Error";
-        if(screen.endsWith(".0")) screen = screen.substring(0,screen.length()-2);
-        if(screen.contains(".") && screen.length() > 11) screen = screen.substring(0, 10);
+        if (latestOperation != null && !latestOperation.isEmpty()) {
+            var currentOperator = Double.parseDouble(screen);
+            var result = switch (latestOperation) {
+                case "+" -> latestValue + Double.parseDouble(screen);
+                case "-" -> latestValue - Double.parseDouble(screen);
+                case "x" -> latestValue * Double.parseDouble(screen);
+                case "/" -> latestValue / Double.parseDouble(screen);
+                default -> throw new IllegalArgumentException();
+            };
+            screen = Double.toString(result);
+            latestValue = result;
+            latestResult = result;
+            if (screen.equals("Infinity")) screen = "Error";
+            if (screen.endsWith(".0")) screen = screen.substring(0, screen.length() - 2);
+            if (screen.contains(".") && screen.length() > 11) screen = screen.substring(0, 10);
+        }
     }
-}

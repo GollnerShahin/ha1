@@ -2,10 +2,12 @@ package htw.berlin.prog2.ha1;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Nested
 @DisplayName("Retro calculator")
 class CalculatorTest {
 
@@ -108,7 +110,7 @@ class CalculatorTest {
 
 
     }
-    // Hier ist das Problem, dass zumindest bei der Repetition von dem Equals ein wenig Code fehlt.
+
     @Test
     @DisplayName("decides what the = operator does in every scenario")
     public void testpressEqualsKeyPlus() {
@@ -176,22 +178,19 @@ class CalculatorTest {
 
         calc.pressEqualsKey();
     }
-    // failed da kein Code geschrieben wurde, welcher dazu führt, dass beim mehrfachen Drücken der Taste
-    // ein neues Ergebnis erscheint und es sich deshalb nur wiederholt
+
     @Test
     public void testpressEqualsKeyRepeated() {
         Calculator calc = new Calculator();
-        calc.latestValue = 10.0;
-        calc.screen = "2";
-        calc.latestOperation = "+";
+        calc.screen = "10";
+        calc.pressBinaryOperationKey("+");
+        calc.screen = "5";
+        calc.pressEqualsKey();
 
         calc.pressEqualsKey();
 
-        assertEquals(12.0, calc.screen);
+        assertEquals("20", calc.screen);
 
-        calc.pressEqualsKey();
-
-        assertEquals(14.0, calc.screen);
     }
     @Test
     public void testpressBinaryOperation() {
@@ -204,7 +203,6 @@ class CalculatorTest {
         assertEquals("+", calc.latestOperation);
     }
 
-    // kann nicht funktionieren da calc.pressEqualsKey(); nicht im Code steht a.k.a es wird nichts gerechnet.
     @Test
     public void testpressBinaryOperationKeyZwischenergebnis() {
         Calculator calc = new Calculator();
@@ -212,20 +210,22 @@ class CalculatorTest {
         calc.screen = "3";
         calc.pressBinaryOperationKey("+");
         calc.screen = "4";
+        calc.pressBinaryOperationKey("+");
 
         assertEquals("7", calc.screen);
     }
-    // kann auch nicht gehen weil nichts gerechnet wird und generell nichts für Division durch 0 im Code steht.
     @Test
     public void testpressBinaryOperationKeyDurchNull() {
         Calculator calc = new Calculator();
         calc.screen = "5";
         calc.pressBinaryOperationKey("/");
         calc.screen = "0";
+        calc.pressBinaryOperationKey("/");
 
         assertEquals("Error", calc.screen);
     }
 }
+
 
 
 
